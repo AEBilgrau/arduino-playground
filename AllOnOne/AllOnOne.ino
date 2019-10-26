@@ -33,6 +33,10 @@ const int pinLight = A2;
 int thresholdvalue = 200;
 
 
+// Define the pins to which the button and relay are attached.
+const int buttonPin = 4;
+const int relayPin =  8;
+
 void setup()
 { 
     // set up the LCD's number of columns and rows:
@@ -57,7 +61,12 @@ void setup()
 
     // Configure the angle sensor's pin for input.
     pinMode(potentiometer, INPUT);
-    
+ 
+    // Configure the relay's pin for output signals.
+    pinMode(relayPin, OUTPUT);
+
+    // Configure the button's pin for input signals.
+    pinMode(buttonPin, INPUT);   
 }
 
 void loop()
@@ -101,6 +110,19 @@ void loop()
     //Serial.println(value_pot);
     Serial.println(value_light_sens);
 
+
+    // Read the state of the button.
+    int buttonState = digitalRead(buttonPin);
+
+    // If the button is pressed, activate (close) the relay.
+    if (buttonState == 1)   
+    {
+        digitalWrite(relayPin, HIGH);
+    }
+    else   
+    {
+        digitalWrite(relayPin, LOW);
+    }
     
     // Wait one tenth of a second between measurements.
     delay(300);
