@@ -12,6 +12,7 @@ const int touchPin  = 2; // D2
 const int pinLed    = 3;
 const int buttonPin = 4;
 const int relayPin =  8;
+const int speakerPin= 7;                  // Grove Buzzer connect to D7
 
 float temperature;
 float resistance;
@@ -29,7 +30,33 @@ const int potentiometer = A1;
 int thresholdvalue = 200;
 
 
-// Define the pins to which the button and relay are attached.
+// Define the pins to which the button and relay are attached
+char notes[] = "ccggaagffeeddc "; // a space represents a rest
+int beats[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
+int tempo = 300;
+
+void playTone(int tone, int duration) {
+    for (long i = 0; i < duration * 1000L; i += tone * 2) {
+        digitalWrite(speakerPin, HIGH);
+        delayMicroseconds(tone);
+        digitalWrite(speakerPin, LOW);
+        delayMicroseconds(tone);
+    }
+}
+
+void playNote(char note, int duration) {
+    char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
+    int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956 };
+
+    // play the tone corresponding to the note name
+    for (int i = 0; i < 8; i++) {
+        if (names[i] == note) {
+            playTone(tones[i], duration);
+        }
+    }
+}
+
+
 
 
 void setup()
@@ -106,13 +133,17 @@ void loop()
     int buttonState = digitalRead(buttonPin);
 
     // If the button is pressed, activate (close) the relay.
-    if (buttonState == 1 | value_touch_sens == 1)   
+    if (buttonState == 1)   
     {
         digitalWrite(relayPin, HIGH);
     }
     else   
     {
         digitalWrite(relayPin, LOW);
+    }
+
+    if (value_touch_sens == 1) {
+      playNote('C', 2 * tempo);
     }
     
     // Wait one tenth of a second between measurements.
