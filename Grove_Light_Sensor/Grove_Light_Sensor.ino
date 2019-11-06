@@ -9,6 +9,7 @@
 // Defines the pins to which the light sensor and LED are connected.
 const int pinLight = A2;
 const int pinLed   = 3;
+const int TouchPin = 2;
 
 // Defines the light-sensor threshold value below which the LED will turn on.
 // Decrease this value to make the device more sensitive to ambient light, or vice-versa.
@@ -18,7 +19,9 @@ void setup()
 {
       // Configure the serial communication line at 9600 baud (bits per second.)
     Serial.begin(9600);
-    
+
+    pinMode(TouchPin, INPUT);
+        
     // Configure the LED's pin for output signals.
     pinMode(pinLed, OUTPUT);
 }
