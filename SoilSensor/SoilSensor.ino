@@ -1,3 +1,4 @@
+
 #include <DHT.h>
 #define DHTPIN 7
 #define DHTTYPE DHT11
@@ -8,7 +9,8 @@ DHT dht(DHTPIN, DHTTYPE);
 //dht DHT;
 //#define dht11_pin 7
 
-int sensor_pin = A0; 
+const int soil_moisture_pin = A0;
+const int rain_sensor_pin = A1;
 int soil_moisture_raw;
 int soil_moisture_pct;
 int llod=1020; // lower limit of detection
@@ -16,6 +18,8 @@ int llod=1020; // lower limit of detection
 int relay_pin=8;
 int relay_lower_threshold_pct=60;
 int relay_upper_threshold_pct=90;
+
+int rain_sensor_value = 0;
 
 //int air_temperature;
 //int air_humidity;
@@ -36,7 +40,8 @@ void loop() {
   //DHT.read11(dht11_pin);
 
   // Read, compute and print moisture
-  soil_moisture_raw= analogRead(sensor_pin);
+  rain_sensor_value = analogRead(rain_sensor_pin)*100/1024; 
+  soil_moisture_raw= analogRead(soil_moisture_pin);
   soil_moisture_pct = min(100, max(0, map(soil_moisture_raw, llod, 0, 0, 100)));
   //air_temperature = DHT.temperature;
   //air_humidity = DHT.humidity;
@@ -44,7 +49,6 @@ void loop() {
   float air_humidity = dht.readHumidity();
   float air_temperature = dht.readTemperature(false); //isFahrenheit = false
   float hic = dht.computeHeatIndex(air_temperature, air_humidity, false);
-
 
   Serial.print("Raw: ");
   Serial.print(soil_moisture_raw);
@@ -60,6 +64,8 @@ void loop() {
   Serial.print(" - HIC: ");
   Serial.print(hic);
   Serial.print(" C");
+  Serial.print(" - rain sens: ");
+  Serial.print(rain_sensor_value);
   
   // Set relay based on miosture
   if (soil_moisture_pct < relay_lower_threshold_pct) {
