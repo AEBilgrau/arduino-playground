@@ -83,15 +83,16 @@ void loop() {
   int j = int(rnorm(pot, 2));
   int i = constrain(j, 0, 30);
   Serial.println(i);
-//   i = random(30);
+
+
   leds[i] = color;
   FastLED.show();
   delay(dly);
 
- i = random(30);
- leds[i] = CRGB::Black;
- FastLED.show();
- delay(dly);
+  i = random(30);
+  leds[i] = CRGB::Black;
+  FastLED.show();
+  delay(dly);
 
 
 }
